@@ -1,48 +1,52 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
+import { DgaInputComponent } from '../../shared/components/dga-input/dga-input.component';
 
 @Component({
   selector: 'match',
   standalone: true,
-  imports: [ MatInputModule, MatListModule, FormsModule ],
+  imports: [ MatListModule, FormsModule, DgaInputComponent, ReactiveFormsModule ],
   template: `
-    <mat-form-field appearance="fill">
-      <mat-label>First Value</mat-label>
-      <input
-        matInput
-        [(ngModel)]="firstValue"
-        placeholder="Enter a value"
-        (ngModelChange)="calculateMatchPercentages()"
-      />
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Second Values (comma-separated)</mat-label>
-      <input
-        matInput
-        [(ngModel)]="secondValue"
-        placeholder="Enter values separated by commas"
-        (ngModelChange)="calculateMatchPercentages()"
-      />
-    </mat-form-field>
-
-    <mat-list>
-      @for (match of matchPercentages; track match) {
-        <mat-list-item>
-          "{{ match.value }}" matches "{{ firstValue }}" by {{ match.percentage.toFixed(2) }}%
-        </mat-list-item>
-      }
-    </mat-list>
+    <form [formGroup]="form" class="p-20">
+      <dga-input formControlName="firstValue" label="Enter Value" />
+      <dga-input formControlName="secondValue" label="Enter Value" />
+  
+      <mat-list>
+        @for (match of matchPercentages; track match; let index = $index) {
+          <mat-list-item>
+            {{ index }} - <b>"{{ match.value }}"</b> matches to <b>"{{ firstValue }}"</b> by {{ match.percentage.toFixed(2) }}%
+          </mat-list-item>
+        }
+      </mat-list>
+    </form>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatchComponent {
-  public firstValue: string = '';
-  public secondValue: string = '';
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly form = new FormGroup<{ firstValue: FormControl<string>; secondValue: FormControl<string> }>({
+    firstValue: new FormControl('', { nonNullable: true }),
+    secondValue: new FormControl('', { nonNullable: true })
+  })
+
+  get secondValue(): string {
+    return this.form.controls.secondValue.value
+  }
+
+  get firstValue(): string {
+    return this.form.controls.firstValue.value
+  }
 
   matchPercentages: { value: string; percentage: number }[] = [];
+
+  constructor() {
+    this.form.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => this.calculateMatchPercentages());
+  }
 
   calculateMatchPercentages(): void {
     const secondValue = this.secondValue.split(',').map(s => s.trim());
