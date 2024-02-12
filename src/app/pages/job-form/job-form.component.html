@@ -1,0 +1,81 @@
+<button mat-raised-button class="submit-mat-button m-t-10 m-l-10 w-50-p" (click)="addJob()">Add Job</button>
+
+<form [formGroup]="form">
+
+  <div formArrayName="jobs" class="p-10">
+
+    @for (job of jobs.controls; track job; let jobIndex = $index) {
+
+      <div [formGroupName]="jobIndex" class="job-section">
+
+        <button mat-raised-button class="cancel-mat-button m-l-10" (click)="removeJob(jobIndex)">Remove Job</button>
+
+        <dga-input formControlName="companyName" label="Enter company name"/>
+
+        <dga-input formControlName="website" label="Enter company web page"/>
+
+        <dga-input formControlName="description" label="Enter company description"/>
+
+        <button mat-raised-button class="submit-mat-button w-100-p" (click)="addPosition(jobIndex)">Add Position</button>
+
+        <div formArrayName="positions">
+
+          @for (position of getPositions(jobIndex).controls; track position; let positionIndex = $index) {
+
+            <div [formGroupName]="positionIndex" class="position-section">
+
+              <button mat-raised-button class="cancel-mat-button m-b-10 m-l-10" (click)="removePosition(jobIndex, positionIndex)">Remove Position</button>
+
+              <dga-input formControlName="positionName" label="Enter position name"/>
+
+              <mat-form-field>
+
+                <mat-label>Enter Position Level</mat-label>
+
+                <mat-select [formControlName]="'level'">
+
+                  @for (level of $levels(); track level) {
+                    <mat-option [value]="level">
+                     {{ level }}
+                    </mat-option>
+                  }
+
+                </mat-select>
+
+              </mat-form-field>
+
+              <dga-input formControlName="description" label="Enter position description"/>
+
+              <div class="d-flex align-center space-between">
+
+                <mat-form-field appearance="fill">
+
+                  <mat-label>From</mat-label>
+
+                  <input matInput [matDatepicker]="startDatePicker" formControlName="startDate">
+
+                  <mat-datepicker-toggle matSuffix [for]="startDatePicker" />
+
+                  <mat-datepicker #startDatePicker />
+
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+
+                  <mat-label>To</mat-label>
+
+                  <input matInput [matDatepicker]="endDatePicker" formControlName="endDate">
+
+                  <mat-datepicker-toggle matSuffix [for]="endDatePicker" />
+
+                  <mat-datepicker #endDatePicker />
+
+                </mat-form-field>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</form>

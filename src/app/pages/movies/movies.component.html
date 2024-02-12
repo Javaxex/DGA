@@ -1,0 +1,41 @@
+<div class="d-flex column center align-center p-10">
+  <mat-form-field appearance="fill">
+    <mat-label>Enter movie name</mat-label>
+    <input matInput #search>
+  </mat-form-field>
+
+  <button class="w-50-p" mat-raised-button (click)="searchQuery$.next(search.value)">Search</button>
+</div>
+
+<mat-grid-list cols="4" rowHeight="2:3" gutterSize="10px">
+  @defer (when $movies().length) {
+    @for (movie of $movies(); track movie.id) {
+      <mat-grid-tile>
+        <mat-card>
+          <mat-card-header>
+
+            <mat-card-title>{{ movie.title }}</mat-card-title>
+
+          </mat-card-header>
+
+          <img mat-card-image [ngSrc]="movie.imageUrl" width="200" height="200" priority alt="Movie image">
+
+          <mat-card-content>
+            <p>{{ movie.description }}</p>
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            <button mat-button>LIKE</button>
+            <button mat-button>SHARE</button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+    } @empty {
+      <div>
+        No Movies
+      </div>
+    }
+  }  @placeholder {
+    <div class="d-flex center"> loading... </div>
+  }
+</mat-grid-list>

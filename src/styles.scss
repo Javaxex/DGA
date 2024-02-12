@@ -1,0 +1,13 @@
+@import './styles/reset.scss';
+@import './styles/shared/variables.scss';
+@import './styles/overrides/material.scss';
+
+@import './styles/shared/margin.scss';
+@import './styles/shared/padding.scss';
+@import './styles/shared/width.scss';
+@import './styles/shared/flex.scss';
+
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

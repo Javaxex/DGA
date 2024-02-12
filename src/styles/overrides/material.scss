@@ -1,0 +1,38 @@
+// Inputs
+
+mat-form-field {
+  width: 100%;
+  padding: 10px;
+
+  .mat-mdc-text-field-wrapper {
+    white-space: nowrap;
+    overflow: visible;
+    padding: 10px;
+  }
+}
+
+.submit-mat-button {
+  background-color: #4CAF50 !important;
+  color: white !important;
+
+  &:hover {
+    background-color: #45a049 !important;
+  }
+
+  &:disabled {
+    background-color: #7daa7d !important;
+  }
+}
+
+.cancel-mat-button {
+  background-color: #DC3444 !important;
+  color: white !important;
+
+  &:hover {
+    background-color: #dc2d3e !important;
+  }
+
+  &:disabled {
+    background-color: #d66f79 !important;
+  }
+}
