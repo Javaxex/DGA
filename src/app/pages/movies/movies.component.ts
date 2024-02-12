@@ -23,13 +23,20 @@ import { Movie } from '../../core/models/movie.interface';
     NgOptimizedImage
   ],
   templateUrl: './movies.component.html',
+  styles: [
+    `
+      :host {
+        mat-card-header::ng-deep .mat-mdc-card-header-text { max-width: 160px }
+      }
+    `
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesComponent {
   private readonly moviesService = inject(MovieService);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly searchQuery$: BehaviorSubject<string> = new BehaviorSubject('');
+  readonly searchQuery$: BehaviorSubject<string> = new BehaviorSubject('starwars');
   readonly $movies = signal<Movie[]>([]);
 
   constructor() {

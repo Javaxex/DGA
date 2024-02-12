@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { DgaInputComponent } from '../../shared/components/dga-input/dga-input.component';
 
@@ -11,7 +11,7 @@ import { DgaInputComponent } from '../../shared/components/dga-input/dga-input.c
   template: `
     <form [formGroup]="form" class="p-20">
       <dga-input formControlName="firstValue" label="Enter Value" />
-      <dga-input formControlName="secondValue" label="Enter Value" />
+      <dga-input formControlName="secondValue" label="Enter Value (Separated By Comma ',')" />
   
       <mat-list>
         @for (match of matchPercentages; track match; let index = $index) {
@@ -28,7 +28,7 @@ export class MatchComponent {
   private readonly destroyRef = inject(DestroyRef);
 
   readonly form = new FormGroup<{ firstValue: FormControl<string>; secondValue: FormControl<string> }>({
-    firstValue: new FormControl('', { nonNullable: true }),
+    firstValue: new FormControl('', { validators: [  Validators.required ], nonNullable: true }),
     secondValue: new FormControl('', { nonNullable: true })
   })
 

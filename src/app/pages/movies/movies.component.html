@@ -1,7 +1,7 @@
 <div class="d-flex column center align-center p-10">
   <mat-form-field appearance="fill">
     <mat-label>Enter movie name</mat-label>
-    <input matInput #search>
+    <input matInput value="starwars" #search>
   </mat-form-field>
 
   <button class="w-50-p" mat-raised-button (click)="searchQuery$.next(search.value)">Search</button>
@@ -14,14 +14,24 @@
         <mat-card>
           <mat-card-header>
 
-            <mat-card-title>{{ movie.title }}</mat-card-title>
+            <mat-card-title class="elipsis">{{ movie.title }}</mat-card-title>
 
           </mat-card-header>
 
-          <img mat-card-image [ngSrc]="movie.imageUrl" width="200" height="200" priority alt="Movie image">
+          @if (movie.image?.url) {
+            <img mat-card-image [ngSrc]="movie.image.url || ''" width="200" height="200" priority alt="Movie image">
+          }
 
           <mat-card-content>
-            <p>{{ movie.description }}</p>
+            @if (movie.year) {
+              <p>Year {{ movie.year }}</p>
+            }
+            @if (movie.episode) {
+              <p>Episode {{ movie.episode }}</p>
+            }
+            @if (movie.season) {
+              <p>Season {{ movie.season }}</p>
+            }
           </mat-card-content>
 
           <mat-card-actions align="end">
